@@ -12,6 +12,7 @@ dotenv.config()
 const app = express()
 
 app.use(cors({
+<<<<<<< HEAD
   origin: [
     "https://assignment2-frontend-0i3j.onrender.com",
     "http://localhost:5173"
@@ -19,6 +20,11 @@ app.use(cors({
   credentials: true
 }))
 
+=======
+  origin: ["https://assignment2-frontend-0i3j.onrender.com", "http://localhost:5173"],
+  credentials: true
+}));
+>>>>>>> 93ef8c7 (feat: Implement full-stack portfolio application)
 app.use(express.json())
 
 connectDB()

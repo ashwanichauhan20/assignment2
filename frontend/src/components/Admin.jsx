@@ -10,7 +10,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import LogoutIcon from "@mui/icons-material/Logout";
 import axios from "axios";
 
-const API = "http://localhost:5000/api";
+import { API_URL as API } from "../config";
 
 // ─── Login Screen ────────────────────────────────────────────────────────────
 const LoginScreen = ({ onLogin }) => {

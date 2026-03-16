@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import dotenv from "dotenv";
+dotenv.config();
 
 const projectSchema = new mongoose.Schema({ title:String, description:String, tech:[String], github:String, live:String });
 const skillSchema = new mongoose.Schema({ name:String, percentage:Number });
@@ -8,7 +10,7 @@ const Skill = mongoose.model('Skill', skillSchema);
 
 const seedDB = async () => {
   try {
-    await mongoose.connect('mongodb://127.0.0.1:27017/portfolio');
+    await mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/portfolio');
     console.log("Connected to populate MongoDB");
 
     await Project.deleteMany();

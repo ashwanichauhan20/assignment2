@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { API_URL } from "../config";
 import {
   Container,
   Typography,
@@ -21,7 +22,7 @@ const Skills = () => {
   ];
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/skills")
+    fetch(`${API_URL}/skills`)
       .then((res) => res.json())
       .then((data) => setSkills(data.length > 0 ? data.map(s => ({ name: s.name, level: s.percentage || s.level })) : fallbackSkills))
       .catch((err) => {

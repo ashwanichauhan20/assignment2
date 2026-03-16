@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { API_URL } from "../config";
 import {
   Container,
   Typography,
@@ -31,7 +32,11 @@ const Contact = () => {
     // Here you would typically send the form data to a backend
     try {
       const response = await axios.post(
+<<<<<<< HEAD
         "https://assignment2-backend-zecz.onrender.com",
+=======
+        `${API_URL}/messages`,
+>>>>>>> 93ef8c7 (feat: Implement full-stack portfolio application)
         formData
       );
       if (response.data) {
