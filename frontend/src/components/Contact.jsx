@@ -31,7 +31,7 @@ const Contact = () => {
     // Here you would typically send the form data to a backend
     try {
       const response = await axios.post(
-        "http://localhost:5000/api/messages",
+        "https://assignment2-backend-zecz.onrender.com",
         formData
       );
       if (response.data) {
