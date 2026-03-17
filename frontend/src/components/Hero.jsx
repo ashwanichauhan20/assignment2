@@ -1,38 +1,25 @@
-import React, { useState, useEffect } from "react";
-import { Container, Typography, Button, Box } from "@mui/material";
-import { Download } from "@mui/icons-material";
-import { API_URL } from "../config";
-
-const BACKEND_URL = "https://assignment2-backend-zecz.onrender.com";
+import React, { useEffect, useState } from "react";
+import { Container, Button } from "@mui/material";
 
 const Hero = () => {
-const [profile, setProfile] = useState({});
+const [data, setData] = useState({});
 
 useEffect(() => {
-fetch(API_URL + "/profile")
-.then(res => res.json())
-.then(data => setProfile(data))
-.catch(err => console.log(err));
+fetch("https://assignment2-backend-zecz.onrender.com/api/profile")
+.then((res) => res.json())
+.then((res) => setData(res))
+.catch((err) => console.log(err));
 }, []);
 
 return (
-<section style={{ padding: "50px" }}>
+<section style={{ padding: "40px", textAlign: "center" }}> <Container> <h1>Hi, I'm {data.name || "Developer"}</h1> <h3>{data.title || "Full Stack Developer"}</h3>
 
-
-Hi, I'm {profile.name || "Developer"}
-
-
-
-    <Typography variant="h6" style={{ marginTop: "10px" }}>
-      {profile.title || "MERN Developer"}
-    </Typography>
-
+```
     <Button
       variant="contained"
-      startIcon={<Download />}
       href={
-        profile.resumeUrl
-          ? BACKEND_URL + profile.resumeUrl
+        data.resumeUrl
+          ? "https://assignment2-backend-zecz.onrender.com" + data.resumeUrl
           : "#"
       }
       style={{ marginTop: "20px" }}
@@ -41,6 +28,7 @@ Hi, I'm {profile.name || "Developer"}
     </Button>
   </Container>
 </section>
+```
 
 );
 };
