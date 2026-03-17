@@ -73,7 +73,10 @@ const Admin = () => {
   // Profile state
   const [profile, setProfile] = useState({
     name: "", title: "", heroSubtitle: "", aboutTitle: "", aboutDescription: "",
-    profileImage: "", resumeUrl: "", githubUrl: "", linkedinUrl: ""
+    profileImage: "", resumeUrl: "", githubUrl: "", linkedinUrl: "",
+    logoText: "", contactEmail: "", phone: "", address: "", footerText: "",
+    skillsTitle: "", skillsSubtitle1: "", skillsSubtitle2: "", projectsTitle: "",
+    contactMainTitle: "", contactSectionTitle: "", contactFormTitle: ""
   });
   const [profileMsg, setProfileMsg] = useState("");
 
@@ -104,6 +107,30 @@ const Admin = () => {
       setProfile(pr.data);
     } catch (err) {
       console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleFileUpload = async (e, field) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    setLoading(true);
+    try {
+      const res = await axios.post(`${API}/upload`, formData, {
+        headers: {
+          ...authHeaders.headers,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      setProfile({ ...profile, [field]: res.data.url });
+      setProfileMsg("✅ File uploaded successfully!");
+    } catch (err) {
+      setProfileMsg("❌ upload failed: " + (err.response?.data?.message || err.message));
     } finally {
       setLoading(false);
     }
@@ -226,12 +253,40 @@ const Admin = () => {
                       <TextField fullWidth label="Hero Subtitle" multiline rows={2} value={profile.heroSubtitle} onChange={e => setProfile({ ...profile, heroSubtitle: e.target.value })} sx={{ gridColumn: { sm: "span 2" } }} />
                       <Divider sx={{ gridColumn: { sm: "span 2" }, my: 1 }} />
                       <TextField fullWidth label="About Title" value={profile.aboutTitle} onChange={e => setProfile({ ...profile, aboutTitle: e.target.value })} />
-                      <TextField fullWidth label="Profile Image URL" value={profile.profileImage} onChange={e => setProfile({ ...profile, profileImage: e.target.value })} />
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                        <TextField fullWidth label="Profile Image URL" value={profile.profileImage} onChange={e => setProfile({ ...profile, profileImage: e.target.value })} />
+                        <Button variant="outlined" component="label" size="small">
+                          📁 Upload Image
+                          <input type="file" hidden accept="image/*" onChange={(e) => handleFileUpload(e, "profileImage")} />
+                        </Button>
+                      </Box>
                       <TextField fullWidth label="About Description" multiline rows={4} value={profile.aboutDescription} onChange={e => setProfile({ ...profile, aboutDescription: e.target.value })} sx={{ gridColumn: { sm: "span 2" } }} />
                       <Divider sx={{ gridColumn: { sm: "span 2" }, my: 1 }} />
-                      <TextField fullWidth label="Resume URL" value={profile.resumeUrl} onChange={e => setProfile({ ...profile, resumeUrl: e.target.value })} />
+                      <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                        <TextField fullWidth label="Resume URL" value={profile.resumeUrl} onChange={e => setProfile({ ...profile, resumeUrl: e.target.value })} />
+                        <Button variant="outlined" component="label" size="small">
+                          📄 Upload Resume (PDF)
+                          <input type="file" hidden accept="application/pdf" onChange={(e) => handleFileUpload(e, "resumeUrl")} />
+                        </Button>
+                      </Box>
                       <TextField fullWidth label="GitHub URL" value={profile.githubUrl} onChange={e => setProfile({ ...profile, githubUrl: e.target.value })} />
                       <TextField fullWidth label="LinkedIn URL" value={profile.linkedinUrl} onChange={e => setProfile({ ...profile, linkedinUrl: e.target.value })} />
+                      <Divider sx={{ gridColumn: { sm: "span 2" }, my: 1 }} />
+                      <Typography variant="subtitle2" sx={{ gridColumn: { sm: "span 2" }, color: "text.secondary" }}>🏢 Branding & Contact Info</Typography>
+                      <TextField fullWidth label="Logo / Navbar Brand" value={profile.logoText} onChange={e => setProfile({ ...profile, logoText: e.target.value })} />
+                      <TextField fullWidth label="Contact Display Email" value={profile.contactEmail} onChange={e => setProfile({ ...profile, contactEmail: e.target.value })} />
+                      <TextField fullWidth label="Phone Number" value={profile.phone} onChange={e => setProfile({ ...profile, phone: e.target.value })} />
+                      <TextField fullWidth label="Address / Location" value={profile.address} onChange={e => setProfile({ ...profile, address: e.target.value })} />
+                      <TextField fullWidth label="Footer Credit Text" value={profile.footerText} onChange={e => setProfile({ ...profile, footerText: e.target.value })} sx={{ gridColumn: { sm: "span 2" } }} />
+                      <Divider sx={{ gridColumn: { sm: "span 2" }, my: 1 }} />
+                      <Typography variant="subtitle2" sx={{ gridColumn: { sm: "span 2" }, color: "text.secondary" }}>🏷️ Section Titles</Typography>
+                      <TextField fullWidth label="Skills Section Title" value={profile.skillsTitle} onChange={e => setProfile({ ...profile, skillsTitle: e.target.value })} />
+                      <TextField fullWidth label="Skills Subtitle (Bars)" value={profile.skillsSubtitle1} onChange={e => setProfile({ ...profile, skillsSubtitle1: e.target.value })} />
+                      <TextField fullWidth label="Skills Subtitle (Chips)" value={profile.skillsSubtitle2} onChange={e => setProfile({ ...profile, skillsSubtitle2: e.target.value })} />
+                      <TextField fullWidth label="Projects Section Title" value={profile.projectsTitle} onChange={e => setProfile({ ...profile, projectsTitle: e.target.value })} />
+                      <TextField fullWidth label="Contact Main Title" value={profile.contactMainTitle} onChange={e => setProfile({ ...profile, contactMainTitle: e.target.value })} />
+                      <TextField fullWidth label="Contact Info Title" value={profile.contactSectionTitle} onChange={e => setProfile({ ...profile, contactSectionTitle: e.target.value })} />
+                      <TextField fullWidth label="Contact Form Title" value={profile.contactFormTitle} onChange={e => setProfile({ ...profile, contactFormTitle: e.target.value })} />
                     </Box>
                     <Button type="submit" variant="contained" size="large" sx={{ mt: 4, px: 6, borderRadius: 2 }} disabled={loading}>
                       {loading ? "Saving..." : "Update Portfolio Content"}

@@ -11,9 +11,24 @@ import {
   ListItem,
 } from "@mui/material";
 import { Menu, Close } from "@mui/icons-material";
+import axios from "axios";
+import { API_URL } from "../config";
 
 const Header = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [logoText, setLogoText] = useState("Portfolio");
+
+  useEffect(() => {
+    const fetchLogo = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/profile`);
+        if (res.data.logoText) setLogoText(res.data.logoText);
+      } catch (err) {
+        console.error("Error fetching logo:", err);
+      }
+    };
+    fetchLogo();
+  }, []);
 
   const menuItems = [
     { name: "Home", href: "#home" },
@@ -35,7 +50,7 @@ const Header = () => {
     <AppBar position="sticky" className="bg-white shadow-md text-gray-800">
       <Toolbar className="flex justify-between">
         <Typography variant="h6" className="font-bold text-blue-600">
-          Portfolio
+          {logoText}
         </Typography>
 
         {/* Desktop Menu */}

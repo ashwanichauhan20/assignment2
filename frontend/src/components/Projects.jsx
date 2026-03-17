@@ -14,12 +14,20 @@ import { GitHub, OpenInNew } from "@mui/icons-material";
 
 const Projects = () => {
   const [projects, setProjects] = useState([]);
+  const [projectsTitle, setProjectsTitle] = useState("Projects");
 
   useEffect(() => {
     fetch(`${API_URL}/projects`)
       .then((res) => res.json())
       .then((data) => setProjects(data))
       .catch((err) => console.error("Error fetching projects:", err));
+
+    fetch(`${API_URL}/profile`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.projectsTitle) setProjectsTitle(data.projectsTitle);
+      })
+      .catch((err) => console.error("Error fetching project title:", err));
   }, []);
 
   return (
@@ -29,7 +37,7 @@ const Projects = () => {
           variant="h3"
           className="text-center font-bold text-gray-800 pb-5 h-full w-full"
         >
-          Projects
+          {projectsTitle}
         </Typography>
 
         <Box className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">

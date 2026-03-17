@@ -12,16 +12,34 @@ import {
 const Skills = () => {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [titles, setTitles] = useState({
+    skillsTitle: "Skills & Technologies",
+    skillsSubtitle1: "Technical Proficiency",
+    skillsSubtitle2: "Technologies I Work With"
+  });
 
   useEffect(() => {
     fetch(`${API_URL}/skills`)
       .then((res) => res.json())
       .then((data) => {
         setSkills(data.map(s => ({ name: s.name, level: s.percentage || s.level || 0 })));
+      })
+      .catch((err) => console.error("Error fetching skills:", err));
+
+    fetch(`${API_URL}/profile`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data) {
+          setTitles({
+            skillsTitle: data.skillsTitle || "Skills & Technologies",
+            skillsSubtitle1: data.skillsSubtitle1 || "Technical Proficiency",
+            skillsSubtitle2: data.skillsSubtitle2 || "Technologies I Work With"
+          });
+        }
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Error fetching skills:", err);
+        console.error("Error fetching titles:", err);
         setLoading(false);
       });
   }, []);
@@ -53,7 +71,7 @@ const Skills = () => {
           variant="h3"
           className="text-center font-bold text-gray-800 mb-12"
         >
-          Skills & Technologies
+          {titles.skillsTitle}
         </Typography>
 
         <Box className="grid md:grid-cols-2 gap-12">
@@ -63,7 +81,7 @@ const Skills = () => {
               variant="h5"
               className="font-semibold mb-8 text-gray-700 border-l-4 border-blue-600 pl-4"
             >
-              Technical Proficiency
+              {titles.skillsSubtitle1}
             </Typography>
             {skills.map((skill, index) => (
               <Box key={index} className="mb-6">
@@ -97,7 +115,7 @@ const Skills = () => {
               variant="h5"
               className="font-semibold mb-8 text-gray-700 border-l-4 border-blue-600 pl-4"
             >
-              Technologies I Work With
+              {titles.skillsSubtitle2}
             </Typography>
             <Box className="flex flex-wrap gap-3">
               {skills.map((skill, index) => (

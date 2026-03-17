@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { API_URL } from "../config";
 import {
@@ -19,6 +19,26 @@ const Contact = () => {
     message: "",
   });
   const [submitStatus, setSubmitStatus] = useState(null);
+  const [profile, setProfile] = useState({
+    contactEmail: "abbasalimohammad8165@gmail.com",
+    phone: "+91 7670888165",
+    address: "Hyderabad, India",
+    contactMainTitle: "Get In Touch",
+    contactSectionTitle: "Contact Information",
+    contactFormTitle: "Send me a Message"
+  });
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/profile`);
+        if (res.data) setProfile(res.data);
+      } catch (err) {
+        console.error("Error fetching contact info:", err);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -29,24 +49,18 @@ const Contact = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the form data to a backend
     try {
       const response = await axios.post(
         `${API_URL}/messages`,
         formData
       );
       if (response.data) {
-        console.log("Form submitted:", formData);
         setSubmitStatus("success");
         setFormData({ name: "", email: "", message: "" });
-
-        // // Reset status after 3 seconds
-        // setTimeout(() => setSubmitStatus(null), 3000);
       }
     } catch (error) {
       console.error("Form submission error:", error);
       setSubmitStatus("error");
-
       setTimeout(() => setSubmitStatus(null), 3000);
     }
   };
@@ -58,7 +72,7 @@ const Contact = () => {
           variant="h3"
           className="text-center font-bold text-gray-800 mb-12 pb-8"
         >
-          Get In Touch
+          {profile.contactMainTitle}
         </Typography>
 
         <Box className="grid md:grid-cols-2 gap-8">
@@ -67,25 +81,25 @@ const Contact = () => {
               variant="h5"
               className="font-bold mb-6 text-gray-700  pb-3 "
             >
-              Contact Information
+              {profile.contactSectionTitle}
             </Typography>
 
             <Box className="space-y-4 ">
               <Box className="flex items-center">
                 <Email className="text-blue-600 mr-4 " />
                 <Typography variant="body1">
-                  abbasalimohammad8165@gmail.com
+                  {profile.contactEmail}
                 </Typography>
               </Box>
 
               <Box className="flex items-center">
                 <Phone className="text-blue-600 mr-4" />
-                <Typography variant="body1">+91 7670888165</Typography>
+                <Typography variant="body1">{profile.phone}</Typography>
               </Box>
 
               <Box className="flex items-center">
                 <LocationOn className="text-blue-600 mr-4" />
-                <Typography variant="body1"> Hyderabad, India</Typography>
+                <Typography variant="body1"> {profile.address}</Typography>
               </Box>
             </Box>
 
@@ -106,7 +120,7 @@ const Contact = () => {
               variant="h5"
               className="font-semibold mb-6 text-gray-700  pb-5"
             >
-              Send me a Message
+              {profile.contactFormTitle}
             </Typography>
 
             {submitStatus === "success" && (
