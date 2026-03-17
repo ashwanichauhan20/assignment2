@@ -56,16 +56,11 @@ return ( <section className="min-h-screen flex items-center bg-gradient-to-br fr
 
         <Box className="flex flex-col sm:flex-row gap-4">
 
-          {/* ✅ Dynamic Resume Download */}
           <Button
             variant="contained"
             startIcon={<Download />}
             component="a"
-            href={
-              resumeUrl
-                ? `${BACKEND_URL}${resumeUrl}`
-                : "#"
-            }
+            href={resumeUrl ? BACKEND_URL + resumeUrl : "#"}
             download
           >
             Download CV
@@ -92,14 +87,9 @@ return ( <section className="min-h-screen flex items-center bg-gradient-to-br fr
         </Box>
       </Box>
 
-      {/* ✅ Dynamic Profile Image */}
       <Box className="md:w-1/2 mt-10 md:mt-0 flex justify-center">
         <img
-          src={
-            profileImage
-              ? `${BACKEND_URL}${profileImage}`
-              : profileFallback
-          }
+          src={profileImage ? BACKEND_URL + profileImage : profileFallback}
           alt="profile"
           className="w-64 h-64 rounded-full object-cover shadow-lg"
         />
