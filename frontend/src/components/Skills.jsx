@@ -6,80 +6,84 @@ import {
   Box,
   LinearProgress,
   Paper,
+  Skeleton,
 } from "@mui/material";
 
 const Skills = () => {
   const [skills, setSkills] = useState([]);
-  const fallbackSkills = [
-    { name: "HTML/CSS", level: 85 },
-    { name: "JavaScript", level: 80 },
-    { name: "React.js", level: 75 },
-    { name: "Node.js", level: 70 },
-    { name: "Express.js", level: 70 },
-    { name: "MongoDB", level: 65 },
-    { name: "Tailwind CSS", level: 80 },
-    { name: "Git/GitHub", level: 75 },
-  ];
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch(`${API_URL}/skills`)
       .then((res) => res.json())
-      .then((data) => setSkills(data.length > 0 ? data.map(s => ({ name: s.name, level: s.percentage || s.level })) : fallbackSkills))
+      .then((data) => {
+        setSkills(data.map(s => ({ name: s.name, level: s.percentage || s.level || 0 })));
+        setLoading(false);
+      })
       .catch((err) => {
         console.error("Error fetching skills:", err);
-        setSkills(fallbackSkills);
+        setLoading(false);
       });
-  }, []);  const technologies = [
-    "MongoDB",
-    "Express.js",
-    "React",
-    "Node.js",
-    "JavaScript",
-    "HTML5",
-    "CSS3",
-    "Tailwind CSS",
-    "Material-UI",
-    "Git",
-    "REST APIs",
-    "Docker",
-  ];
+  }, []);
+
+  if (loading) {
+    return (
+      <section id="skills" className="py-16 bg-gray-50">
+        <Container maxWidth="lg">
+          <Skeleton width="40%" height={60} sx={{ mx: "auto", mb: 6 }} />
+          <Box className="grid md:grid-cols-2 gap-8">
+            <Box>
+              {[1, 2, 3, 4].map(i => <Skeleton key={i} height={40} sx={{ mb: 2 }} />)}
+            </Box>
+            <Box>
+              <Box className="flex flex-wrap gap-2">
+                {[1, 2, 3, 4, 5, 6].map(i => <Skeleton key={i} width={80} height={40} />)}
+              </Box>
+            </Box>
+          </Box>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section id="skills" className="py-16 bg-gray-50">
       <Container maxWidth="lg">
         <Typography
           variant="h3"
-          className="text-center font-bold text-gray-800 mb-12 pb-5 pr-20"
+          className="text-center font-bold text-gray-800 mb-12"
         >
           Skills & Technologies
         </Typography>
 
-        <Box className="grid md:grid-cols-2 gap-8 mb-12">
+        <Box className="grid md:grid-cols-2 gap-12">
+          {/* Progress Bars Section */}
           <Box>
             <Typography
               variant="h5"
-              className="font-semibold mb-6 text-gray-700 pb-3"
+              className="font-semibold mb-8 text-gray-700 border-l-4 border-blue-600 pl-4"
             >
-              Technical Skills
+              Technical Proficiency
             </Typography>
             {skills.map((skill, index) => (
-              <Box key={index} className="mb-4">
-                <Box className="flex justify-between mb-1">
-                  <Typography variant="body1" className="font-medium">
+              <Box key={index} className="mb-6">
+                <Box className="flex justify-between mb-2">
+                  <Typography variant="body1" className="font-semibold text-gray-700">
                     {skill.name}
                   </Typography>
-                  <Typography variant="body2" className="text-gray-600">
+                  <Typography variant="body2" className="text-blue-600 font-bold">
                     {skill.level}%
                   </Typography>
                 </Box>
                 <LinearProgress
                   variant="determinate"
                   value={skill.level}
-                  className="h-2 rounded-full"
+                  className="h-2.5 rounded-full"
                   sx={{
-                    backgroundColor: "#e5e7eb",
+                    backgroundColor: "#e2e8f0",
                     "& .MuiLinearProgress-bar": {
                       backgroundColor: "#2563eb",
+                      borderRadius: "5px",
                     },
                   }}
                 />
@@ -87,25 +91,31 @@ const Skills = () => {
             ))}
           </Box>
 
+          {/* Chips Section */}
           <Box>
             <Typography
               variant="h5"
-              className="font-semibold mb-6 text-gray-700 pb-1"
+              className="font-semibold mb-8 text-gray-700 border-l-4 border-blue-600 pl-4"
             >
               Technologies I Work With
             </Typography>
             <Box className="flex flex-wrap gap-3">
-              {technologies.map((tech, index) => (
+              {skills.map((skill, index) => (
                 <Paper
                   key={index}
-                  elevation={1}
-                  className="px-4 py-2 bg-white hover:bg-blue-50 transition-colors"
+                  elevation={0}
+                  className="px-5 py-2.5 bg-white border border-gray-200 rounded-lg hover:border-blue-500 hover:text-blue-600 hover:shadow-md transition-all cursor-default"
                 >
-                  <Typography variant="body2" className="text-gray-700">
-                    {tech}
+                  <Typography variant="body2" className="font-medium">
+                    {skill.name}
                   </Typography>
                 </Paper>
               ))}
+              {skills.length === 0 && (
+                <Typography variant="body2" className="text-gray-500 italic">
+                  No skills added yet.
+                </Typography>
+              )}
             </Box>
           </Box>
         </Box>

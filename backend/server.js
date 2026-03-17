@@ -6,6 +6,7 @@ import projectRoutes from "./routes/projectRoutes.js"
 import skillRoutes from "./routes/skillRoutes.js"
 import messageRoutes from "./routes/messageRoutes.js"
 import authRoutes from "./routes/authRoutes.js"
+import profileRoutes from "./routes/profileRoutes.js"
 
 dotenv.config()
 
@@ -27,6 +28,7 @@ app.use("/api/auth", authRoutes)
 app.use("/api/projects", projectRoutes)
 app.use("/api/skills", skillRoutes)
 app.use("/api/messages", messageRoutes)
+app.use("/api/profile", profileRoutes)
 
 app.get("/", (req, res) => {
   res.send("API is running...")
