@@ -16,10 +16,13 @@ fetch(API_URL + "/profile")
 }, []);
 
 return (
-<section style={{ padding: "50px" }}> <Container> <Typography variant="h4">
-Hi, I'm {profile.name || "Developer"} </Typography>
+<section style={{ padding: "50px" }}>
 
-```
+
+Hi, I'm {profile.name || "Developer"}
+
+
+
     <Typography variant="h6" style={{ marginTop: "10px" }}>
       {profile.title || "MERN Developer"}
     </Typography>
@@ -38,7 +41,6 @@ Hi, I'm {profile.name || "Developer"} </Typography>
     </Button>
   </Container>
 </section>
-```
 
 );
 };
