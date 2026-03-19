@@ -1,142 +1,119 @@
 import React, { useState, useEffect } from "react";
 import { API_URL } from "../config";
 import {
-  Container,
-  Typography,
-  Box,
-  LinearProgress,
-  Paper,
-  Skeleton,
+  Container, Typography, Box, LinearProgress, Paper, Skeleton, Grid
 } from "@mui/material";
 
 const Skills = () => {
   const [skills, setSkills] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [titles, setTitles] = useState({
+  const [profile, setProfile] = useState({
     skillsTitle: "Skills & Technologies",
-    skillsSubtitle1: "Technical Proficiency",
-    skillsSubtitle2: "Technologies I Work With"
+    skillsSubtitle1: "Technical Skills",
+    skillsSubtitle2: "Technologies I Work With",
+    primaryColor: "#14b8a6"
   });
 
   useEffect(() => {
-    fetch(`${API_URL}/skills`)
-      .then((res) => res.json())
-      .then((data) => {
-        setSkills(data.map(s => ({ name: s.name, level: s.percentage || s.level || 0 })));
-      })
-      .catch((err) => console.error("Error fetching skills:", err));
-
-    fetch(`${API_URL}/profile`)
-      .then((res) => res.json())
-      .then((data) => {
-        if (data) {
-          setTitles({
-            skillsTitle: data.skillsTitle || "Skills & Technologies",
-            skillsSubtitle1: data.skillsSubtitle1 || "Technical Proficiency",
-            skillsSubtitle2: data.skillsSubtitle2 || "Technologies I Work With"
-          });
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Error fetching titles:", err);
-        setLoading(false);
-      });
+    const fetchData = async () => {
+      try {
+        const [skillsRes, profileRes] = await Promise.all([
+          fetch(`${API_URL}/skills`).then(res => res.json()),
+          fetch(`${API_URL}/profile`).then(res => res.json())
+        ]);
+        setSkills(skillsRes.map(s => ({ name: s.name, level: s.percentage || s.level || 0 })));
+        if (profileRes) setProfile(prev => ({ ...prev, ...profileRes }));
+      } catch (err) { console.error("Error fetching skills data:", err); }
+      finally { setLoading(false); }
+    };
+    fetchData();
   }, []);
 
   if (loading) {
     return (
-      <section id="skills" className="py-16 bg-gray-50">
+      <section id="skills" className="py-24 bg-[#0f172a]">
         <Container maxWidth="lg">
-          <Skeleton width="40%" height={60} sx={{ mx: "auto", mb: 6 }} />
-          <Box className="grid md:grid-cols-2 gap-8">
-            <Box>
-              {[1, 2, 3, 4].map(i => <Skeleton key={i} height={40} sx={{ mb: 2 }} />)}
-            </Box>
-            <Box>
-              <Box className="flex flex-wrap gap-2">
-                {[1, 2, 3, 4, 5, 6].map(i => <Skeleton key={i} width={80} height={40} />)}
-              </Box>
-            </Box>
-          </Box>
+          <Skeleton width="40%" height={60} sx={{ mx: "auto", mb: 8, bgcolor: "rgba(255,255,255,0.05)" }} />
         </Container>
       </section>
     );
   }
 
   return (
-    <section id="skills" className="py-16 bg-gray-50">
-      <Container maxWidth="lg">
-        <Typography
-          variant="h3"
-          className="text-center font-bold text-gray-800 mb-12"
-        >
-          {titles.skillsTitle}
-        </Typography>
+    <section id="skills" className="py-24 bg-[#0f172a] relative">
+      <Container maxWidth="lg" className="fade-in">
+        <Box sx={{ textAlign: "center", mb: 12 }}>
+          <Typography variant="h2" sx={{ fontWeight: 800, color: "white", mb: 2, fontSize: { xs: "2.5rem", md: "3.5rem" } }}>
+            {profile.skillsTitle}
+          </Typography>
+          <Box sx={{ width: 80, height: 6, bgcolor: "white", mx: "auto", borderRadius: 10 }} />
+        </Box>
 
-        <Box className="grid md:grid-cols-2 gap-12">
-          {/* Progress Bars Section */}
-          <Box>
+        <Grid container spacing={6}>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography
               variant="h5"
-              className="font-semibold mb-8 text-gray-700 border-l-4 border-blue-600 pl-4"
+              sx={{ fontWeight: 800, mb: 6, color: "#22d3ee", fontSize: "1.8rem" }}
             >
-              {titles.skillsSubtitle1}
+              {profile.skillsSubtitle1}
             </Typography>
             {skills.map((skill, index) => (
-              <Box key={index} className="mb-6">
+              <Box key={index} className="mb-8">
                 <Box className="flex justify-between mb-2">
-                  <Typography variant="body1" className="font-semibold text-gray-700">
+                  <Typography variant="body1" sx={{ fontWeight: 700, color: "#94a3b8" }}>
                     {skill.name}
                   </Typography>
-                  <Typography variant="body2" className="text-blue-600 font-bold">
+                  <Typography variant="body2" sx={{ color: "white", fontWeight: 800 }}>
                     {skill.level}%
                   </Typography>
                 </Box>
                 <LinearProgress
                   variant="determinate"
                   value={skill.level}
-                  className="h-2.5 rounded-full"
                   sx={{
-                    backgroundColor: "#e2e8f0",
+                    height: 8,
+                    borderRadius: 5,
+                    backgroundColor: "white",
                     "& .MuiLinearProgress-bar": {
-                      backgroundColor: "#2563eb",
-                      borderRadius: "5px",
+                      backgroundColor: profile.primaryColor || "#14b8a6",
+                      borderRadius: 5,
                     },
                   }}
                 />
               </Box>
             ))}
-          </Box>
+          </Grid>
 
-          {/* Chips Section */}
-          <Box>
+          <Grid size={{ xs: 12, md: 6 }}>
             <Typography
               variant="h5"
-              className="font-semibold mb-8 text-gray-700 border-l-4 border-blue-600 pl-4"
+              sx={{ fontWeight: 800, mb: 6, color: "#22d3ee", fontSize: "1.8rem" }}
             >
-              {titles.skillsSubtitle2}
+              {profile.skillsSubtitle2}
             </Typography>
-            <Box className="flex flex-wrap gap-3">
+            <Box className="flex flex-wrap gap-4">
               {skills.map((skill, index) => (
                 <Paper
                   key={index}
                   elevation={0}
-                  className="px-5 py-2.5 bg-white border border-gray-200 rounded-lg hover:border-blue-500 hover:text-blue-600 hover:shadow-md transition-all cursor-default"
+                  className="dark-surf-card"
+                  sx={{ 
+                    px: 4, py: 2, 
+                    borderRadius: "10px",
+                    textAlign: "center",
+                    minWidth: 140,
+                    transition: "all 0.3s ease",
+                    "&:hover": { transform: "translateY(-5px)", boxShadow: "0 10px 20px rgba(0,0,0,0.3)" }
+                  }}
                 >
-                  <Typography variant="body2" className="font-medium">
+                  <Typography variant="body1" sx={{ fontWeight: 800, color: "white" }}>
                     {skill.name}
                   </Typography>
                 </Paper>
               ))}
-              {skills.length === 0 && (
-                <Typography variant="body2" className="text-gray-500 italic">
-                  No skills added yet.
-                </Typography>
-              )}
             </Box>
-          </Box>
-        </Box>
+          </Grid>
+        </Grid>
       </Container>
     </section>
   );

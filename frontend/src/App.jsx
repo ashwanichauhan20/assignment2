@@ -1,6 +1,7 @@
 import React from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import { Box } from "@mui/material";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -9,6 +10,7 @@ import Projects from "./components/Projects";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Admin from "./components/Admin";
+import DynamicSections from "./components/DynamicSections";
 
 
 const theme = createTheme({
@@ -40,15 +42,16 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <div className="App">
+      <Box sx={{ pt: { xs: "70px", md: "100px" } }}>
         <Header />
         <Hero />
         <About />
         <Skills />
         <Projects />
+        <DynamicSections />
         <Contact />
         <Footer />
-      </div>
+      </Box>
     </ThemeProvider>
   );
 }

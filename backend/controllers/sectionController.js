@@ -20,12 +20,14 @@ export const createSection = async (req, res) => {
 };
 
 export const updateSection = async (req, res) => {
+  console.log("HIT UPDATE SECTION! id:", req.params.id);
   try {
     const section = await Section.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!section) return res.status(404).json({ message: "Section not found" });
     res.json(section);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("updateSection error:", error.message);
+    res.status(400).json({ message: "XYZ_UPDATE " + error.message });
   }
 };
 
@@ -40,10 +42,12 @@ export const deleteSection = async (req, res) => {
 };
 
 export const reorderSections = async (req, res) => {
+  console.log("HIT REORDER SECTIONS!");
   try {
     const { sections } = req.body;
     if (!sections || !Array.isArray(sections)) {
-      return res.status(400).json({ message: "Invalid sections payload" });
+      console.error("reorderSections invalid payload:", req.body);
+      return res.status(400).json({ message: "XYZ_REORDER Invalid sections payload" });
     }
     const bulkOps = sections.map(sec => ({
       updateOne: {
@@ -54,6 +58,7 @@ export const reorderSections = async (req, res) => {
     await Section.bulkWrite(bulkOps);
     res.json({ message: "Sections reordered successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("reorderSections error:", error.message);
+    res.status(500).json({ message: "XYZ_REORDER " + error.message });
   }
 };

@@ -4,8 +4,14 @@ import protect from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.route("/").get(getSections).post(protect, createSection);
-router.route("/reorder").put(protect, reorderSections);
-router.route("/:id").put(protect, updateSection).delete(protect, deleteSection);
+// Define /reorder completely explicitly FIRST to avoid /:id intercepting it
+router.put('/reorder', protect, reorderSections);
+
+// Regular CRUD routes
+router.get('/', getSections);
+router.post('/', protect, createSection);
+
+router.put('/:id', protect, updateSection);
+router.delete('/:id', protect, deleteSection);
 
 export default router;
