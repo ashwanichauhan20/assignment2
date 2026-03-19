@@ -67,8 +67,9 @@ router.post("/", protect, upload.single("file"), (req, res) => {
   }
   
   // Return Cloudinary URL if available, otherwise fallback to local URL
-  const fileUrl = isCloudinaryConfigured ? req.file.path : `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
-  
+  const protocol = req.get("host").includes("localhost") ? "http" : "https";
+const fileUrl = isCloudinaryConfigured ? req.file.path : `${protocol}://${req.get("host")}/uploads/${req.file.filename}`;
+
   res.send({
     message: isCloudinaryConfigured ? "File Uploaded to Cloudinary" : "File Uploaded Locally (Cloudinary not configured)",
     url: fileUrl,
