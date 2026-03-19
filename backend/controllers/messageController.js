@@ -34,3 +34,25 @@ export const createMessage = async (req, res) => {
   }
 }
 
+export const replyToMessage = async (req, res) => {
+  const { id } = req.params;
+  const { replyText } = req.body;
+
+  try {
+    const message = await Message.findById(id);
+    if (!message) {
+      return res.status(404).json({ message: "Message not found" });
+    }
+
+    await sendEmail({
+      to: message.email,
+      subject: `Re: Your message to Portfolio`,
+      text: replyText,
+    });
+
+    res.json({ message: "Reply sent successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

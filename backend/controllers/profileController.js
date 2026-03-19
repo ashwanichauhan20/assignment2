@@ -14,6 +14,7 @@ export const getProfile = async (req, res) => {
 };
 
 export const updateProfile = async (req, res) => {
+  console.log("Updating Profile with data:", JSON.stringify(req.body, null, 2));
   try {
     let profile = await Profile.findOne();
     if (profile) {

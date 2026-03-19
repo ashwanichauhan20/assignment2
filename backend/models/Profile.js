@@ -8,8 +8,25 @@ const profileSchema = new mongoose.Schema({
   aboutDescription: { type: String, default: "I'm a passionate MERN stack developer..." },
   profileImage: { type: String },
   resumeUrl: { type: String },
+  heroResumeLabel: { type: String, default: "DOWNLOAD CV" },
   githubUrl: { type: String },
   linkedinUrl: { type: String },
+  heroGithubLabel: { type: String, default: "GITHUB" },
+  heroLinkedinLabel: { type: String, default: "LINKEDIN" },
+  aboutCards: {
+    type: [{
+      title: { type: String },
+      desc: { type: String },
+      icon: { type: String }
+    }],
+    default: [
+      { icon: "Code", title: "Web Development", desc: "Passionate about creating responsive applications." },
+      { icon: "School", title: "Continuous Learning", desc: "Always eager to learn new technologies." },
+      { icon: "Psychology", title: "Problem Solving", desc: "Enjoy tackling complex challenges." }
+    ]
+  },
+  instagramUrl: { type: String },
+  twitterUrl: { type: String },
   contactEmail: { type: String },
   phone: { type: String, default: "+91 7670888165" },
   address: { type: String, default: "Hyderabad, India" },
@@ -23,6 +40,9 @@ const profileSchema = new mongoose.Schema({
   contactMainTitle: { type: String, default: "Get In Touch" },
   contactSectionTitle: { type: String, default: "Contact Information" },
   contactFormTitle: { type: String, default: "Send me a Message" },
+  // UI Customization
+  primaryColor: { type: String, default: "#2563eb" },
+  secondaryColor: { type: String, default: "#4f46e5" },
 }, { timestamps: true });
 
 export default mongoose.model("Profile", profileSchema);
