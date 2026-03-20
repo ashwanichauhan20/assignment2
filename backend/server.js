@@ -19,9 +19,9 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
-app.set("trust proxy", 1);
-const app = express();
 
+const app = express();
+app.set("trust proxy", 1);
 
 // Database connection
 connectDB();
